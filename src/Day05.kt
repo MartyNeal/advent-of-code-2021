@@ -55,13 +55,13 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day05_test")
+    val testInput = readLines("Day05_test")
 
     println(part1(testInput))
     check(part1(testInput) == 5)
     check(part2(testInput) == 12)
 
-    val input = readInput("Day05")
+    val input = readLines("Day05")
     println(part1(input))
     println(part2(input))
 }

@@ -54,13 +54,13 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day04_test")
+    val testInput = readLines("Day04_test")
     val (testCalled, testBoards) = inputToBoards(testInput)
 
     check(part1(testCalled, testBoards) == 4512)
     check(part2(testCalled, testBoards) == 1924)
 
-    val input = readInput("Day04")
+    val input = readLines("Day04")
     val (called, boards) = inputToBoards(input)
     println(part1(called, boards))
     println(part2(called, boards))

@@ -39,11 +39,11 @@ fun main() {
         .let { (horizontal, depth) -> horizontal * depth }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day02_test")
+    val testInput = readLines("Day02_test")
     check(part1(testInput) == 150L)
     check(part2(testInput) == 900L)
 
-    val input = readInput("Day02")
+    val input = readLines("Day02")
     println(part1(input))
     println(part2(input))
 }

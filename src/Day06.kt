@@ -1,5 +1,3 @@
-import java.lang.Integer.parseInt
-
 fun main() {
     fun part1(input: List<Int>, days: Int = 80): Int {
         if (days == 0) return input.size
@@ -23,11 +21,11 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day06_test")[0].split(",").map(::parseInt)
+    val testInput = readNumbers("Day06_test")
     check(part1(testInput) == 5934)
     check(part2(testInput) == 26984457539L)
-//
-    val input = readInput("Day06")[0].split(",").map(::parseInt)
+
+    val input = readNumbers("Day06")
     println(part1(input))
     println(part2(input))
 }
