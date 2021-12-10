@@ -1,13 +1,13 @@
 @file:Suppress("unused")
 
+import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
 import java.io.File
 import java.lang.Integer.parseInt
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.math.BigInteger.*
 import java.util.*
-import kotlin.NoSuchElementException
-import kotlin.collections.HashMap
 import kotlin.math.min
 import kotlin.math.sqrt
 
@@ -19,6 +19,7 @@ fun Iterable<Int>.median() = sorted()[count() / 2]
 fun <T> permutations(items: Iterable<T>): Sequence<List<T>> =
     if (items.none()) sequenceOf(listOf())
     else items.asSequence().flatMap { i -> permutations(items - i).map { listOf(i) + it } }
+
 fun <T> choose(items: Iterable<T>, n: Int): Sequence<List<T>> =
     if (n == 0) sequenceOf(listOf())
     else items.asSequence().flatMapIndexed { i, item -> choose(items.drop(i + 1), n - 1).map { listOf(item) + it } }
@@ -49,7 +50,7 @@ fun <T> List<T>.rotateLeft(n: Int) = List(size) { this[(it + n) % size] }
 fun <T> List<T>.rotateRight(n: Int) = List(size) { this[(it - n + size) % size] }
 fun String.rotateLeft(n: Int) = substring(n) + substring(0, n)
 fun String.rotateRight(n: Int) = substring(length - n) + substring(0, length - n)
-fun String.splitAt(n: Int) = listOf(substring(0,n), substring(n))
+fun String.splitAt(n: Int) = listOf(substring(0, n), substring(n))
 fun String.splitAt(splits: List<Int>) = (listOf(0) + splits + this.length).zipWithNext(this::substring)
 fun rotations(s: String): List<String> = s.indices.map { s.rotateLeft(it) }
 fun fac(n: Int): BigInteger = if (n == 0) ONE else n.toBigInteger() * fac(n - 1)
@@ -78,8 +79,7 @@ fun <T> Iterable<T>.hasCount(count: Int) = take(count + 1).count() == count
 fun <T> Sequence<T>.hasCount(count: Int) = take(count + 1).count() == count
 infix fun <T1, T2> Iterable<T1>.combine(other: Iterable<T2>): Sequence<Pair<T1, T2>> = combine(other, ::Pair)
 
-inline fun <T1, T2, T3> Iterable<T1>.combine(other: Iterable<T2>, crossinline combiner: (T1, T2) -> T3): Sequence<T3>
-{
+inline fun <T1, T2, T3> Iterable<T1>.combine(other: Iterable<T2>, crossinline combiner: (T1, T2) -> T3): Sequence<T3> {
     return this.asSequence().flatMap { e1 -> other.asSequence().map { e2 -> combiner(e1, e2) } }
 }
 
@@ -87,16 +87,13 @@ val IntRange.size: Int get() = last - first + 1
 fun BigInteger.isPandigital(range: IntRange) = toString().isPandigital(range)
 fun String.isPandigital(range: IntRange) = length == range.size && (digits() symmetricDifference range).isEmpty()
 
-infix fun <T> Iterable<T>.symmetricDifference(s2: Iterable<T>): Set<T> = (this union s2) - (this intersect s2)
-infix fun Long.pow(e: Int): Long
-{
+infix fun <T> Iterable<T>.symmetricDifference(s2: Iterable<T>): Set<T> = (this union s2) - (this intersect s2.toSet())
+infix fun Long.pow(e: Int): Long {
     var res = 1L
     var base = this
     var power = e
-    while (power > 0)
-    {
-        if (power % 2 == 1)
-        {
+    while (power > 0) {
+        if (power % 2 == 1) {
             res *= base
         }
         base *= base
@@ -107,21 +104,17 @@ infix fun Long.pow(e: Int): Long
 
 operator fun BigInteger.rangeTo(other: BigInteger) = BigIntegerRange(this, other)
 
-class BigIntegerRange(override val start: BigInteger, override val endInclusive: BigInteger) : ClosedRange<BigInteger>, Iterable<BigInteger>
-{
+class BigIntegerRange(override val start: BigInteger, override val endInclusive: BigInteger) : ClosedRange<BigInteger>, Iterable<BigInteger> {
     override operator fun iterator(): Iterator<BigInteger> = BigIntegerRangeIterator(this)
 }
 
-class BigIntegerRangeIterator(private val range: ClosedRange<BigInteger>) : Iterator<BigInteger>
-{
+class BigIntegerRangeIterator(private val range: ClosedRange<BigInteger>) : Iterator<BigInteger> {
     private var current = range.start
 
     override fun hasNext(): Boolean = current <= range.endInclusive
 
-    override fun next(): BigInteger
-    {
-        if (!hasNext())
-        {
+    override fun next(): BigInteger {
+        if (!hasNext()) {
             throw NoSuchElementException()
         }
         return current++
@@ -130,11 +123,9 @@ class BigIntegerRangeIterator(private val range: ClosedRange<BigInteger>) : Iter
 
 fun evenOddCoprimes(): Sequence<Pair<Long, Long>> = sequence {
     yield(2L to 1L)
-    for ((m, n) in evenOddCoprimes())
-    {
+    for ((m, n) in evenOddCoprimes()) {
         val mn = m + n
-        if (mn > 0)
-        { // A bit of overflow checking code
+        if (mn > 0) { // A bit of overflow checking code
             val mnm = mn + m
             val mnn = mn + n
             if (mnm > 0) yield(mnm to m)
@@ -154,8 +145,7 @@ fun <T> Sequence<T>.semisorted(buffer: Int, comparator: Comparator<T>? = null): 
     val iter = this@semisorted.iterator()
     val q = PriorityQueue(buffer, comparator)
     repeat(buffer) { if (iter.hasNext()) q.add(iter.next()) else return@repeat }
-    while (q.isNotEmpty())
-    {
+    while (q.isNotEmpty()) {
         yield(q.remove())
         if (iter.hasNext()) q.add(iter.next())
     }
@@ -175,7 +165,7 @@ fun Sequence<Float>.product() = fold(1.0f, Float::times)
 fun Sequence<BigInteger>.product() = fold(ONE, BigInteger::times)
 fun Sequence<BigDecimal>.product() = fold(BigDecimal.ONE, BigDecimal::times)
 
-fun <T: Comparable<T>> Iterable<T>.compareTo(other: Iterable<T>): Int {
+fun <T : Comparable<T>> Iterable<T>.compareTo(other: Iterable<T>): Int {
     val otherI = other.iterator()
     for (e in this) {
         if (!otherI.hasNext()) return 1 // other has run out of elements, so `this` is larger
@@ -207,4 +197,16 @@ fun partitions(n: Int, max: Int, prefix: List<Int>): Sequence<List<Int>> = seque
     for (i in min(max, n) downTo 1) {
         yieldAll(partitions(n - i, i, prefix + i))
     }
+}
+
+fun setClipboard(s: String) {
+    Toolkit
+        .getDefaultToolkit()
+        .systemClipboard
+        .setContents(StringSelection(s), null)
+}
+
+fun showAnswer(ans: Any) {
+    println(ans)
+    setClipboard(ans.toString())
 }

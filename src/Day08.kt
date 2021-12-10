@@ -37,6 +37,6 @@ fun main() {
         .sumOf { it.joinToString("").let(::parseInt) }
 
     val input = readLines("Day08")
-    println(part1(input))
-    println(part2(input))
+    showAnswer(part1(input))
+    showAnswer(part2(input))
 }
