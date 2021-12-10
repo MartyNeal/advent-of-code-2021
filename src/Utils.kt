@@ -15,6 +15,7 @@ fun readLines(name: String) = File("src", "$name.txt").readLines()
 fun readNumbers(name: String) = readLines(name)[0].split(",").map(::parseInt)
 
 fun Iterable<Int>.median() = sorted()[count() / 2]
+fun Iterable<Long>.median() = sorted()[count() / 2]
 
 fun <T> permutations(items: Iterable<T>): Sequence<List<T>> =
     if (items.none()) sequenceOf(listOf())
@@ -27,7 +28,7 @@ fun <T> choose(items: Iterable<T>, n: Int): Sequence<List<T>> =
 fun Int.digits(): List<Int> = this.toString().digits()
 fun Long.digits(): List<Int> = this.toString().digits()
 fun BigInteger.digits(): List<Int> = this.toString().digits()
-fun String.digits(): List<Int> = this.map { it - '0' }
+fun String.digits(): List<Int> = this.map(Char::digitToInt)
 fun nats(start: Int) = generateSequence(start) { it + 1 }
 fun nats(start: Long = 1L) = generateSequence(start) { it + 1L }
 fun nats(start: BigInteger) = generateSequence(start, BigInteger::inc)

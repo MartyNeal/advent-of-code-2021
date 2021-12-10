@@ -47,7 +47,7 @@ fun main() {
                     }
                 }
         }
-        return basins.map(List<Cell<Int>>::size).sortedDescending().take(3).product()
+        return basins.map { it.size }.sortedDescending().take(3).product()
     }
 
     val testInput = readLines("Day09_test")
