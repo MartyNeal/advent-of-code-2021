@@ -1,4 +1,4 @@
-class Grid<T>(val cells: List<Cell<T>>, val rows: Int, val cols: Int) {
+open class Grid<T>(val cells: List<Cell<T>>, val rows: Int, val cols: Int) {
     companion object {
         fun <T> from(elements: List<List<T>>): Grid<T> {
             val cells = mutableListOf<Cell<T>>()
@@ -21,20 +21,24 @@ val <T> Cell<T>.left: Cell<T>?
     get() = if (col == 0) null else grid.cells[row * grid.cols + col - 1]
 val <T> Cell<T>.right: Cell<T>?
     get() = if (col == grid.cols - 1) null else grid.cells[row * grid.cols + col + 1]
-val <T> Cell<T>.neighbors: List<Cell<T>>
+val <T> Cell<T>.adjacentNeighbors: List<Cell<T>>
     get() = listOfNotNull(up, left, right, down)
+val <T> Cell<T>.allNeighbors: List<Cell<T>>
+    get() = listOfNotNull(up, left, right, down, up?.left, up?.right, down?.left, down?.right)
+val <T> Grid<T>.cellValues: List<T>
+    get() = cells.map(Cell<T>::value)
 
 fun main() {
     fun part1(input: List<String>) = Grid.from(input.map(String::digits))
         .cells
-        .filter { cell -> cell.neighbors.all { n -> n.value > cell.value } }
+        .filter { cell -> cell.adjacentNeighbors.all { n -> n.value > cell.value } }
         .sumOf { it.value + 1 }
 
     fun part2(input: List<String>): Int {
         val basins = mutableListOf<MutableList<Cell<Int>>>()
         for (cell in Grid.from(input.map(String::digits)).cells.filter { it.value != 9 }) {
             basins
-                .filter { (it intersect cell.neighbors).any() }
+                .filter { (it intersect cell.adjacentNeighbors).any() }
                 .also {
                     when (it.size) {
                         0 -> basins.add(mutableListOf(cell))
