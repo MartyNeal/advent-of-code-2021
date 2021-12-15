@@ -1,16 +1,13 @@
 import java.util.*
 
-typealias Graph = Map<String, Set<String>>
-typealias Path = List<String>
-
 fun main() {
 
-    fun parseInput(input: List<String>): Graph = input
+    fun parseInput(input: List<String>): Map<String, Set<String>> = input
         .flatMap { it.split("-").let { listOf(it, it.reversed()) } }
         .groupBy({ it[0] }) { it[1] }
         .mapValues { if (it.key == "end") setOf() else it.value.filter { it != "start" }.toSet() }
 
-    fun part1(input: Graph) =
+    fun part1(input: Map<String, Set<String>>) =
         sequence {
             val q = ArrayDeque(listOf(listOf("start")))
             for (path in generateSequence { q.poll() }) {
@@ -20,12 +17,12 @@ fun main() {
             }
         }.count()
 
-    fun Path.hasNotVisitedSmallCaveTwice(): Boolean {
+    fun List<String>.hasNotVisitedSmallCaveTwice(): Boolean {
         val s = mutableSetOf<String>()
         return asSequence().filter { it.all(Char::isLowerCase) }.all { s.add(it) }
     }
 
-    fun part2(input: Graph) =
+    fun part2(input: Map<String, Set<String>>) =
         sequence {
             val q = ArrayDeque(listOf(listOf("start")))
             for (path in generateSequence { q.poll() }) {
