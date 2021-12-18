@@ -61,14 +61,12 @@ fun main() {
     }
     fun part2(lines: List<String>): Long {
         val tile = lines.map { it.digits().map(Int::toLong) }
-
-        //... and I call myself a programmer... shameful
         val m =
-        tile.map { line -> line.map { ((it + 0) - 1) % 9 + 1 } + line.map { ((it + 1) - 1) % 9 + 1 } + line.map { ((it + 2) - 1) % 9 + 1 } + line.map { ((it + 3) - 1) % 9 + 1 } + line.map { ((it + 4) - 1) % 9 + 1 } } +
-        tile.map { line -> line.map { ((it + 1) - 1) % 9 + 1 } + line.map { ((it + 2) - 1) % 9 + 1 } + line.map { ((it + 3) - 1) % 9 + 1 } + line.map { ((it + 4) - 1) % 9 + 1 } + line.map { ((it + 5) - 1) % 9 + 1 } } +
-        tile.map { line -> line.map { ((it + 2) - 1) % 9 + 1 } + line.map { ((it + 3) - 1) % 9 + 1 } + line.map { ((it + 4) - 1) % 9 + 1 } + line.map { ((it + 5) - 1) % 9 + 1 } + line.map { ((it + 6) - 1) % 9 + 1 } } +
-        tile.map { line -> line.map { ((it + 3) - 1) % 9 + 1 } + line.map { ((it + 4) - 1) % 9 + 1 } + line.map { ((it + 5) - 1) % 9 + 1 } + line.map { ((it + 6) - 1) % 9 + 1 } + line.map { ((it + 7) - 1) % 9 + 1 } } +
-        tile.map { line -> line.map { ((it + 4) - 1) % 9 + 1 } + line.map { ((it + 5) - 1) % 9 + 1 } + line.map { ((it + 6) - 1) % 9 + 1 } + line.map { ((it + 7) - 1) % 9 + 1 } + line.map { ((it + 8) - 1) % 9 + 1 } }
+            List(tile.size * 5) { i ->
+                List(tile[0].size * 5) { j ->
+                    val (a, b) = i % tile.size to j % tile[0].size
+                    (tile[a][b] + i / tile.size + j / tile[0].size - 1) % 9 + 1
+        } }
         return Graph4Way(m).pathSum(Node(0, 0), Node(m.lastIndex, m.lastIndex)) - m[0][0]
     }
 
